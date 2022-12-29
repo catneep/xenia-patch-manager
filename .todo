@@ -1,0 +1,10 @@
+Done:
+    ✔ Add icons to dialogs @done (12/28/2022, 4:12:20 PM)
+    ✔ Sort files by name @done (12/28/2022, 4:21:12 PM)
+
+Pending:
+    ☐ Add directory field to UI
+        ☐ Auto detect xenia's directory?
+    ☐ Restore configuration from backup file
+    ☐ Style 😎
+    ☐ Refactor button generation

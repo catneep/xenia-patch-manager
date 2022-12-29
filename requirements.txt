@@ -1,0 +1,7 @@
+natsort==8.2.0
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.11.0
+PyQt6==6.4.0
+PyQt6-Qt6==6.4.1
+PyQt6-sip==13.4.0
+tomlkit==0.11.6
