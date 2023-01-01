@@ -22,7 +22,7 @@ try {
 [void](New-Item dist/path.txt)
 
 # Adds the user's home directory as default
-[void](Write-Output $env:userprofile | Set-Content dist/path)
+[void](Write-Output $env:userprofile | Set-Content dist/path.txt)
 
 Write-Host "Creating .zip..."
 [void](Move-Item dist xenia-patch-manager)
