@@ -2,7 +2,7 @@ import os
 from shutil import copyfile
 
 import tomlkit as toml
-from natsort import natsorted, ns
+from natsort import natsorted
 
 from Models.Patch import Patch
 
@@ -33,12 +33,12 @@ def get_toml_patches(toml: dict) -> dict:
   return toml_data
 
 def save_toml(path: str, data: dict) -> bool:
-  print('Data to write:', str(data)[:50])
-  print('Saving', toml.dumps(data))
+  print('Parsed data:', str(data)[:50])
+  print('Data written:', toml.dumps(data), sep= '\n')
   try:
     with open(path, "w") as file:
       file.write(toml.dumps(data))
-    print('saved')
+    print('Data saved!')
     return True
   except Exception as e:
     print(f'IO error:', e)
@@ -46,6 +46,7 @@ def save_toml(path: str, data: dict) -> bool:
 
 def backup_file(filepath: str) -> str | None:
   if not (os.path.exists(filepath)):
+    print('Source file does not exist')
     return None
   
   filepath = os.path.realpath(filepath).replace('\\','/')
@@ -53,9 +54,13 @@ def backup_file(filepath: str) -> str | None:
   name = os.path.splitext(os.path.basename(filepath))[0]
   backup_dest = f'{path}/{name}.bak'
 
-  copyfile(
-    src= filepath,
-    dst= backup_dest
-  )
+  try:
+    copyfile(
+      src= filepath,
+      dst= backup_dest
+    )
 
-  return backup_dest
+    return backup_dest
+  except:
+    print('IO Error')
+    return None

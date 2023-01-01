@@ -5,6 +5,10 @@ from PyQt6.QtWidgets import (
     QCheckBox,
     QMessageBox,
     QPushButton,
+    QWidget,
+    QComboBox,
+    QHBoxLayout,
+    QLabel,
 )
 
 from Models.Patch import Patch
@@ -45,9 +49,36 @@ class Dialog:
     dialog.exec()
 
 class Button(QPushButton):
-  def __init__(self, text: str, action):
+  def __init__(self, text: str, action, disabled= False):
     super().__init__()
     self.clicked.connect(
       lambda: action()
     )
     self.setText(text)
+    if disabled:
+      self.setDisabled(True)
+
+class FilesHeader(QWidget):
+  def __init__(self, combo: QComboBox):
+    super().__init__()
+    layout = QHBoxLayout()
+    layout.addWidget(
+        QLabel('Game:')
+    )
+    layout.addWidget(combo)
+    layout.addStretch()
+    self.setLayout(layout)
+
+class FilesCombo(QComboBox):
+  def __init__(self, tomls: tuple, action):
+    super().__init__()
+    if len(tomls) < 1:
+        self.setPlaceholderText('No items found')
+        self.setDisabled(True)
+        return
+
+    self.setPlaceholderText('Select a file')
+    self.addItems(tomls)
+    self.currentTextChanged.connect(
+        lambda name: action(name)
+    )
