@@ -9,11 +9,19 @@ Write-Host "Installing dependencies..."
 [void](pip install -r requirements.txt)
 deactivate
 
+# Assumes PyInstaller is installed
 Write-Host "Building executable..."
-pyinstaller --onefile --paths venv\Lib\site-packages --name "Xenia Patch Manager" --icon=assets/icon.ico --clean --noconsole main.py
+try {
+	pyinstaller --onefile --paths venv\Lib\site-packages --name "Xenia Patch Manager" --icon=assets/icon.ico --clean --noconsole main.py
+} catch {
+	Write-Host "Failed to build executable!" -Foregroundcolor Red
+	Break Script
+}
 [void](mkdir dist/assets)
 [void](Copy-Item assets/icon.png dist/assets/)
-[void](New-Item dist/path)
+[void](New-Item dist/path.txt)
+
+# Adds the user's home directory as default
 [void](Write-Output $env:userprofile | Set-Content dist/path)
 
 Write-Host "Creating .zip..."
@@ -28,4 +36,4 @@ Write-Host "Cleaning stuff up..."
 [void](Move-Item "Xenia Patch Manager.spec" output/)
 [void](Move-Item XeniaPatchManager.zip output/)
 
-Write-Host "Done :)"
+Write-Host "Done :)" -Foregroundcolor DarkCyan

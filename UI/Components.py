@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QCheckBox,
-    QMessageBox
+    QMessageBox,
+    QPushButton,
 )
 
 from Models.Patch import Patch
@@ -42,3 +43,11 @@ class Dialog:
     dialog.setWindowTitle(self.title)
     dialog.setText(self.body)
     dialog.exec()
+
+class Button(QPushButton):
+  def __init__(self, text: str, action):
+    super().__init__()
+    self.clicked.connect(
+      lambda: action()
+    )
+    self.setText(text)

@@ -5,7 +5,6 @@ from PyQt6.QtWidgets import (
     QApplication,
     QLineEdit,
     QHBoxLayout,
-    QMessageBox,
     QLabel,
     QWidget,
     QComboBox,
@@ -24,6 +23,7 @@ from UI.MainWindow import MainWindow
 from UI.Components import (
     Dialog,
     PatchToggle,
+    Button,
 )
 
 def generate_file_combo(files: tuple) -> QComboBox:
@@ -40,7 +40,7 @@ def generate_file_combo(files: tuple) -> QComboBox:
     )
     return combo
 
-current_toml = SessionData()
+session_data = SessionData()
 PATCHES: tuple = None
 WINDOW = None
 FILE_PATH = ""
@@ -48,14 +48,14 @@ FILE_PATH = ""
 def render_current_toml_data(filename: str):
     _ELEMENTS_PER_COLUMN = 8
     WINDOW.sections['body'].clear_content()
-    current_toml.set_toml(
+    session_data.set_toml(
         parse_toml(f'{FILE_PATH}/{filename}')
     )
-    current_toml.set_filepath(f'{FILE_PATH}/{filename}')
+    session_data.set_filepath(f'{FILE_PATH}/{filename}')
 
     PATCHES = generate_patch_toggles(
         data= get_toml_patches(
-            toml= current_toml.get_toml()
+            toml= session_data.get_toml()
         )
     )
 
@@ -69,7 +69,7 @@ def render_current_toml_data(filename: str):
         )
     
     print('Loaded toml:', filename)
-    print('Parsed data:', f'{str(current_toml.get_toml())[:24]}...')
+    print('Parsed data:', f'{str(session_data.get_toml())[:24]}...')
 
 def generate_patch_toggles(data) -> tuple:
     stack = []
@@ -79,28 +79,20 @@ def generate_patch_toggles(data) -> tuple:
         )
     return tuple(stack)
 
-def generate_save_button() -> QPushButton:
-    def _handle_save():
-        saved = save_toml(
-            path= current_toml.get_filepath(),
-            data= current_toml.get_toml()
-        )
-
-        Dialog(
-            title= 'Success',
-            body= 'Configuration updated successfully'
-        ).show() if saved else Dialog(
-            title= 'Error',
-            body= 'Configuration couldn\'t be updated',
-            icon= 'error'
-        ).show()
-        
-
-    btn = QPushButton('Save Changes')
-    btn.clicked.connect(
-        lambda: _handle_save()
+def _handle_save():
+    saved = save_toml(
+        path= session_data.get_filepath(),
+        data= session_data.get_toml()
     )
-    return btn
+
+    Dialog(
+        title= 'Success',
+        body= 'Configuration updated successfully'
+    ).show() if saved else Dialog(
+        title= 'Error',
+        body= 'Configuration couldn\'t be updated',
+        icon= 'error'
+    ).show()
 
 def generate_path_header() -> QWidget:
     txt = QLineEdit()
@@ -139,48 +131,36 @@ def generate_file_header(tomls: tuple) -> QWidget:
     widget.setLayout(layout)
     return widget
 
-def generate_backup_button() -> QPushButton:
-    def _handle_backup():
-        backup_path = backup_file(
-            filepath= current_toml.get_filepath()
-        )
-        if not backup_path:
-            Dialog(
-                title= 'Error',
-                body= "Backup couldn't be created",
-                icon= 'error'
-            ).show()
-            return
-
-        Dialog(
-            title= 'Success',
-            body= f'Backup created at {backup_path}'
-        ).show()
-
-    btn = QPushButton('Backup configuration')
-    btn.clicked.connect(
-        lambda: _handle_backup()
+def _handle_backup():
+    backup_path = backup_file(
+        filepath= session_data.get_filepath()
     )
-    return btn
+    if not backup_path:
+        Dialog(
+            title= 'Error',
+            body= "Backup couldn't be created",
+            icon= 'error'
+        ).show()
+        return
 
-def show_success_dialog():
-    dialog = QMessageBox()
-    dialog.setWindowTitle("Success")
-    dialog.setText("Patch configuration was updated")
-    dialog.exec()
+    Dialog(
+        title= 'Success',
+        body= f'Backup created at {backup_path}'
+    ).show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon('assets/icon.png'))
 
     # Get route from file as fallback
-    if os.path.exists('path'):
-        with open('path', 'r') as path_file:
+    if os.path.exists('path.txt'):
+        with open('path.txt', 'r') as path_file:
             line = path_file.readline().strip()
             print('line', line)
             if line:
                 sys.argv.append(line)
 
+    # Exit if there's no directory
     if (
         (len(sys.argv) < 2) or
         not (os.path.exists(sys.argv[1]))
@@ -192,7 +172,7 @@ if __name__ == "__main__":
             icon= 'error'
         ).show()
 
-        exit(0)
+        sys.exit(0)
 
     FILE_PATH = sys.argv[1]
     WINDOW = MainWindow('Xenia Patch Manager')
@@ -203,9 +183,15 @@ if __name__ == "__main__":
     )
 
     WINDOW.sections['footer'].add_child(
-        generate_save_button()
+        Button(
+            text= 'Save Changes',
+            action= lambda: _handle_save()
+        )
     ).add_child(
-        generate_backup_button()
+        Button(
+            text= 'Backup configuration',
+            action= lambda: _handle_backup()
+        )
     )
 
     WINDOW.show()
