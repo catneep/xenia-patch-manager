@@ -1,1 +1,1 @@
-E:/havil/code/xenia-patch-manager
+path/to/patches
