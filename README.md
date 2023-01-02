@@ -43,11 +43,11 @@ After cloning the repository and activating the virtual environment, you can sim
 
     py main.py path/to/patches
 
-Likewise, you can edit the route to your local patch directory in the file ***"path"*** and run the following command:
+Likewise, you can edit the route to your local patch directory in the file ***"path.txt"*** and run the following command:
 
     py main.py
 
-Or by editing the ***"path"*** file as stated above and then running the executable from the lastest release.
+Or by editing the ***"path.txt"*** file as stated above and then running the executable from the lastest release.
 
 If it all works out properly, you'll see the following window:
 

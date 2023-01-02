@@ -1,3 +1,14 @@
+param (
+	[switch] $Open
+)
+
+$OUTPUT_DIR = 'output/'
+
+if (Test-Path -Path $OUTPUT_DIR){
+	Write-Host "Removing past builds..."
+	[void](Remove-Item -Path $OUTPUT_DIR -Recurse -Force)
+}
+
 Write-Host "Searching virtual environment..."
 if (-not (Test-Path -Path './venv')){
 	Write-Host "Environment not found, generating..."
@@ -31,9 +42,15 @@ Write-Host "Creating .zip..."
 
 Write-Host "Cleaning stuff up..."
 [void](mkdir output)
-[void](Move-Item dist/ output/)
-[void](Move-Item build/ output/)
-[void](Move-Item "Xenia Patch Manager.spec" output/)
-[void](Move-Item XeniaPatchManager.zip output/)
+[void](Move-Item dist/ $OUTPUT_DIR)
+[void](Move-Item build/ $OUTPUT_DIR)
+[void](Move-Item "Xenia Patch Manager.spec" $OUTPUT_DIR)
+[void](Move-Item XeniaPatchManager.zip $OUTPUT_DIR)
+
+if ($Open){
+	Set-Location $OUTPUT_DIR
+	explorer .
+	Set-Location ..
+}
 
 Write-Host "Done :)" -Foregroundcolor DarkCyan

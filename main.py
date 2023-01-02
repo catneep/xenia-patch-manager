@@ -18,6 +18,7 @@ from UI.Components import (
     Button,
     FilesHeader,
     FilesCombo,
+    DirectoryInput,
 )
 
 session_data = SessionData()
@@ -39,6 +40,7 @@ def render_current_toml_data(filename: str):
             )
         )
     )
+    print('Current session data:', session_data)
 
     # Place elements in grid (n x 8)
     for index, patch in enumerate(
@@ -58,6 +60,23 @@ def render_current_toml_data(filename: str):
         'Parsed data:',
         f'{str(session_data.get_toml())[:24]}...'
     )
+
+def update_patch_directory(header: FilesHeader, directory: str):
+    print(session_data)
+    session_data.set_filepath(directory)
+    header.combo.update_data(
+        get_toml_files(
+            path= session_data.get_filepath()
+        )
+    )
+    header.update()
+
+    # Then overwrite saved path
+    if os.path.exists('path.txt'):
+        with open('path.txt', 'w') as path_file:
+            path_file.write(
+                f'{session_data.get_filepath()}\n'
+            )
 
 def _generate_patch_toggles(data) -> tuple:
     stack = []
@@ -128,16 +147,29 @@ if __name__ == "__main__":
         sys.argv[1]
     )
 
+    files_header = FilesHeader(
+        combo= FilesCombo(
+            tomls= get_toml_files(
+                session_data.get_filepath()
+            ),
+            action= render_current_toml_data
+        )
+    )
+
+    directory_input = DirectoryInput(
+        session_data.get_filepath()
+    )
+    directory_input.set_on_change(
+        lambda: update_patch_directory(header= files_header, directory= directory_input.get_directory())
+    )
+
     WINDOW = MainWindow('Xenia Patch Manager')
     WINDOW.sections['header'].add_child(
-        FilesHeader(
-            combo= FilesCombo(
-                tomls= get_toml_files(
-                    session_data.get_filepath()
-                ),
-                action= render_current_toml_data
-            )
-        ), coords= (0,0)
+        directory_input,
+        coords= (0,0)
+    ).add_child(
+        files_header,
+        coords= (1,0)
     )
 
     WINDOW.sections['footer'].add_child(

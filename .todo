@@ -1,11 +1,12 @@
 Done:
     ✔ Add icons to dialogs @done (12/28/2022, 4:12:20 PM)
     ✔ Sort files by name @done (12/28/2022, 4:21:12 PM)
+    ✔ Refactor button generation @done (1/2/2023, 12:02:23 AM)
+    ✔ Add directory field to UI @done (1/2/2023, 2:55:27 AM)
 
 Pending:
-    ☐ Add directory field to UI
-        ☐ Auto detect xenia's directory?
+    ☐ Auto detect xenia's directory?
     ☐ Restore configuration from backup file
     ☐ Style 😎
-    ☐ Refactor button generation
     ☐ Support patch generation? (see https://github.com/XboxChef/Xenia-Patch-Maker)
+    ☐ Update README.md
