@@ -33,8 +33,17 @@ try {
 [void](Copy-Item assets/styles.css dist/assets/)
 [void](New-Item dist/path.txt)
 
-# Adds the user's home directory as default
-[void](Write-Output $env:userprofile | Set-Content dist/path.txt)
+# Adds Users/Public as default path
+[void](Write-Output $env:public | Set-Content dist/path.txt)
+
+# Minimize CSS with dart-sass
+Write-Host "Minimizing stylesheet..."
+try {
+	sass ./assets/styles.css ./dist/assets/styles.css --style compressed --no-source-map
+} catch {
+	Write-Host "Failed to minimize stylesheet, copying source as fallback..." -ForegroundColor DarkYellow
+	[void](Copy-Item assets/styles.css dist/assets/)
+}
 
 Write-Host "Creating .zip..."
 [void](Move-Item dist xenia-patch-manager)

@@ -16,42 +16,51 @@ This utility was built using the patches in [this repository](https://github.com
 ## Requirements
 In order to use this utility, you'll need:
 - [Xenia Canary](https://github.com/xenia-canary/xenia-canary)
-- [Python](https://www.python.org/) 3.8 or later
-- [PyInstaller](https://pyinstaller.org/en/stable/) for Windows (if building .exe from source)
 - A couple of [compatible patch files](https://github.com/xenia-canary/game-patches)
 
-## Installation
-You can easily get an executable for Windows from this repo's [***Releases***](https://github.com/catneep/xenia-patch-manager/releases) page.
+If you're building the executable as stated in the [Build manually](#build-manually) section, you'll also need:
+- [7-Zip](https://www.7-zip.org/)
+- [Dart Sass](https://sass-lang.com/dart-sass)
+- [Python](https://www.python.org/) 3.8 or later
+- [PyInstaller](https://pyinstaller.org/en/stable/) for Windows
 
-### Build manually
+## Installation
+You can easily get an executable for Windows from this repo's [***Releases***](https://github.com/catneep/xenia-patch-manager/releases) page, or if you want to get your hands dirty, you may follow one of the following sections:
+
+### For development
 You can run this utility by using the following commands:
 
     git clone https://github.com/catneep/xenia-patch-manager
     cd xenia-patch-manager
+    py -m venv venv
     . venv/scripts/activate
     pip install -r requirements
 
-### Build executable
+### Build manually
 Alternatively, you can build an .exe file by running the included ***"build.ps1"*** script from PowerShell (5.1 or later):
 
     git clone https://github.com/catneep/xenia-patch-manager
     cd xenia-patch-manager
     ./build.ps1
 
+This will generate a new directory named ***"output"***, where you'll find the executable.
+
 ## How to use
+### For development
 After cloning the repository and activating the virtual environment, you can simply run the utility with:
 
-    py main.py path/to/patches
+    py main.py path/to/patch_directory
 
 Likewise, you can edit the route to your local patch directory in the file ***"path.txt"*** and run the following command:
 
     py main.py
 
-Or by editing the ***"path.txt"*** file as stated above and then running the executable from the lastest release.
-
-If it all works out properly, you'll see the following window:
+### General use
+You'll see the following window on startup:
 
 ![Main window](assets/main-view.png)
+
+You may select a new root directory by using the ***"Browse"*** button.
 
 You can then select a file from your locally stored patches in order to display all available options:
 
