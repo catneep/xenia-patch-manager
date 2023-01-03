@@ -19,13 +19,22 @@ def get_toml_files(path: str) -> tuple:
           results.append(file)
   return tuple(results)
 
-def parse_toml(path: str) -> dict:
+def parse_toml(path: str) -> dict | None:
   file_data = None
-  with open(path, "rb") as file:
-    file_data = toml.load(file)
+  try:
+    with open(path, "rb") as file:
+      file_data = toml.load(file)
+  except PermissionError as e:
+    print(
+      "## Permission Error (Most likely file doesn't exist)",
+      e,
+      "Returning file_data=:",
+      file_data, sep= '\n\t')
   return file_data
 
-def get_toml_patches(toml: dict) -> dict:
+def get_toml_patches(toml: dict | None) -> dict:
+  if not toml:
+    return {}
   toml_data = {}
   for patch_data in toml["patch"]:
     patch = Patch(patch_data["name"], patch_data)
