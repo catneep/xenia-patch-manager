@@ -190,5 +190,8 @@ if __name__ == "__main__":
         )
     )
 
+    with open('assets/styles.css', 'r') as stylesheet:
+        app.setStyleSheet(stylesheet.read())
+
     WINDOW.show()
     app.exec()
