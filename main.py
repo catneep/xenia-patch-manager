@@ -87,6 +87,9 @@ def _generate_patch_toggles(data) -> tuple:
     return tuple(stack)
 
 def _save_changes_handler():
+    if not session_data.fullpath:
+        return
+
     saved = save_toml(
         path= session_data.get_fullpath(),
         data= session_data.get_toml()
@@ -102,6 +105,9 @@ def _save_changes_handler():
     ).show()
 
 def _backup_conf_handler():
+    if not session_data.fullpath:
+        return
+
     backup_path = backup_file(
         filepath= session_data.get_fullpath()
     )
