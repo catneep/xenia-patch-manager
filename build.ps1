@@ -30,6 +30,7 @@ try {
 }
 [void](mkdir dist/assets)
 [void](Copy-Item assets/icon.png dist/assets/)
+[void](Copy-Item assets/styles.css dist/assets/)
 [void](New-Item dist/path.txt)
 
 # Adds the user's home directory as default
